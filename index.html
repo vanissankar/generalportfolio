@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>My Portfolio</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="ANIS SANKAR V" name="keywords">
+    <meta content="Portfolio" name="description">
+
+    <!-- Favicon -->
+    <link href="/img/CHANNEL LOGO.jpg" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet"> 
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/css/style.css" rel="stylesheet">
+    
+    <!-- FORMSPREE STYLES -->
+    <style>
+        .alert { margin-top: 20px; }
+        .help-block { margin-top: 5px; font-size: 0.875em; }
+    </style>
+
+    <!-- 🔥 BIG OVERLAY ZOOM + GREEN ARROWS -->
+    <style>
+    /* ONLY ARROWS CHANGED TO GREEN */
+    .prev, .next { 
+        position: absolute; 
+        top: 50%; 
+        transform: translateY(-50%); 
+        background: rgba(40, 167, 69, 0.9) !important;
+        color: white; 
+        border: none; 
+        padding: 15px; 
+        font-size: 24px; 
+        cursor: pointer; 
+        border-radius: 50%; 
+        width: 50px; 
+        height: 50px;
+        z-index: 10;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .prev { left: -25px; }
+    .next { right: -25px; }
+    .prev:hover, .next:hover { background: #28a745 !important; transform: translateY(-50%) scale(1.1); }
+
+    /* PORTFOLIO SLIDESHOW */
+    .portfolio-section { position: relative; }
+    .portfolio-slideshow { max-width: 900px; margin: 50px auto; position: relative; display: block; }
+    .portfolio-grid { display: none; }
+    .slideshow-container { position: relative; max-width: 100%; }
+    .slide-item { display: none; animation: slideFade 0.6s ease-in-out; cursor: zoom-in !important; }
+    .slide-item.active { display: block; }
+    .slide-item img { 
+        width: 100%; 
+        height: 500px; 
+        object-fit: cover; 
+        border-radius: 15px; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+        transition: transform 0.3s ease;
+    }
+    .slide-item:hover img { transform: scale(1.02); }
+    .slide-overlay { 
+        position: absolute; 
+        top: 20px; 
+        right: 20px; 
+        background: rgba(0,123,255,0.9); 
+        color: white; 
+        padding: 10px 15px; 
+        border-radius: 25px; 
+        display: flex; 
+        align-items: center; 
+        pointer-events: none; 
+        z-index: 5;
+    }
+    .slide-category { font-size: 14px; font-weight: bold; }
+    
+    @keyframes slideFade { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+    
+    @media (max-width: 768px) { 
+        .slide-item img { height: 300px; } 
+        .prev { left: 10px; } 
+        .next { right: 10px; }
+        .slide-item { cursor: pointer !important; }
+    }
+    
+    #toggle-slideshow:checked ~ .portfolio-slideshow { display: none !important; }
+    #toggle-slideshow:checked ~ .portfolio-grid { display: block !important; }
+    .slideshow-toggle { position: absolute; top: 20px; right: 20px; z-index: 10; }
+    .slideshow-toggle label { position: relative; display: inline-block; width: 60px; height: 34px; }
+    .slideshow-toggle input { opacity: 0; width: 0; height: 0; }
+    .switch { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+    .switch:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .switch { background-color: #007bff; }
+    input:checked + .switch:before { transform: translateX(26px); }
+
+    /* GRID VIEW BUTTONS */
+    .portfolio-btn { background: #007bff !important; }
+
+    /* 🔥 MASSIVE CUSTOM OVERLAY ZOOM */
+    .zoom-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.95);
+        z-index: 9999;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        cursor: zoom-out;
+    }
+    .zoom-overlay.active { display: flex !important; }
+    .zoom-image {
+        max-width: 95vw;
+        max-height: 95vh;
+        object-fit: contain;
+        border-radius: 10px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+        animation: zoomIn 0.3s ease-out;
+    }
+    @keyframes zoomIn {
+        from { transform: scale(0.3); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+    .zoom-close {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        color: white;
+        font-size: 40px;
+        cursor: pointer;
+        z-index: 10000;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    }
+    .zoom-close:hover { color: #28a745; transform: scale(1.2); }
+    .zoom-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(40, 167, 69, 0.9);
+        color: white;
+        border: none;
+        padding: 20px;
+        font-size: 24px;
+        cursor: pointer;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        z-index: 10000;
+    }
+    .zoom-nav.prev { left: 20px; }
+    .zoom-nav.next { right: 20px; }
+    .zoom-nav:hover { background: #28a745; transform: translateY(-50%) scale(1.1); }
+    .zoom-title {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        background: rgba(0,0,0,0.7);
+        padding: 10px 20px;
+        border-radius: 25px;
+        font-size: 18px;
+        font-weight: bold;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    }
+    </style>
+</head>
+
+<body data-spy="scroll" data-target=".navbar" data-offset="51">
+    <!-- Navbar Start -->
+    <nav class="navbar fixed-top shadow-sm navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-lg-5">
+        <a href="/index.html" class="navbar-brand ml-lg-3">
+            <h1 class="m-0 display-5"><span class="text-primary">ATL TECH ANIS</span></h1>
+        </a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse px-lg-3" id="navbarCollapse">
+            <div class="navbar-nav m-auto py-0">
+                <a href="/#home" class="nav-item nav-link active">Home</a>
+                <a href="/#about" class="nav-item nav-link">About</a>
+                <a href="/#qualification" class="nav-item nav-link">Quality</a>
+                <a href="/#skill" class="nav-item nav-link">Skill</a>
+                <a href="/#service" class="nav-item nav-link">Service</a>
+                <a href="/#portfolio" class="nav-item nav-link">Portfolio</a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Header Start -->
+    <div class="container-fluid bg-primary d-flex align-items-center mb-5 py-5" id="home" style="min-height: 100vh;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-5 px-5 pl-lg-0 pb-5 pb-lg-0">
+                    <img class="img-fluid w-100 rounded-circle shadow-sm" src="/img/profil.jpg" alt="">
+                </div>
+                <div class="col-lg-7 text-center text-lg-left">
+                    <h3 class="text-white font-weight-normal mb-3">I'm</h3>
+                    <h1 class="display-3 text-uppercase text-primary mb-2" style="-webkit-text-stroke: 2px #ffffff;">ANIS SANKAR V</h1>
+                    <h1 class="typed-text-output d-inline font-weight-lighter text-white"></h1>
+                    <div class="typed-text d-none">Web Designer, Tech Enthusiast, Youtuber, Product Designer</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header End -->
+
+    <!-- About Start -->
+    <div class="container-fluid py-5" id="about">
+        <div class="container">
+            <div class="position-relative d-flex align-items-center justify-content-center">
+                <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #dee2e6;">About</h1>
+                <h1 class="position-absolute text-uppercase text-primary">About Me</h1>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-lg-5 pb-4 pb-lg-0">
+                    <img class="img-fluid rounded w-100" src="/img/profil.jpg" alt="">
+                </div>
+                <div class="col-lg-7">
+                    <h3 class="mb-4">Tech Enthusiast</h3>
+                    <p>Hello! I'm Anis Sankar, a passionate tech enthusiast and a budding computer science engineer pursuing my BE in CSE at KSRCE. When I'm not immersed in academics, you can find me creating content as a tech YouTuber, sharing my knowledge and experiences with the world. I'm driven by a desire to harness technology for social impact, and I enjoy working on innovative mini-projects that can make a real difference in people's lives. I'm excited to share my journey, projects, and insights with you through this portfolio.</p>
+                    <div class="row mb-3">
+                        <div class="col-sm-6 py-2"><h6>Name: <span class="text-secondary">ANIS SANKAR</span></h6></div>
+                        <div class="col-sm-6 py-2"><h6>Birthday: <span class="text-secondary">10 OCTOBER 2006</span></h6></div>
+                        <div class="col-sm-6 py-2"><h6>Qualification: <span class="text-secondary">BE-CSE(Ongoing)</span></h6></div>
+                        <div class="col-sm-6 py-2"><h6>Phone: <span class="text-secondary">+19 7010941844</span></h6></div>
+                        <div class="col-sm-6 py-2"><h6>Email: <span class="text-secondary">anissankarv@gmail.com</span></h6></div>
+                        <div class="col-sm-6 py-2"><h6>Address: <span class="text-secondary">1/1258 Main Road,Katchery Street, Pazhaiyakayal, Thoothukudi,Tamilnadu, India</span></h6></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+
+    <!-- Qualification Start -->
+    <div class="container-fluid py-5" id="qualification">
+        <div class="container">
+            <div class="position-relative d-flex align-items-center justify-content-center">
+                <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #dee2e6;">Quality</h1>
+                <h1 class="position-absolute text-uppercase text-primary">Education & Experience</h1>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h3 class="mb-4">My Education</h3>
+                    <div class="border-left border-primary pt-2 pl-4 ml-2">
+                        <div class="position-relative mb-4">
+                            <i class="far fa-dot-circle text-primary position-absolute" style="top: 2px; left: -32px;"></i>
+                            <h5 class="font-weight-bold mb-1">Bachelor of Engineering In CSE</h5>
+                            <p class="mb-2"><strong>K.S.R College Of Engineering</strong> | <small>2024 - 2028</small></p>
+                            <p>KSR College of Engineering (KSRCE) is a renowned institution in Tamil Nadu, India, known for its academic excellence and innovative research.</p>
+                        </div>
+                        <div class="position-relative mb-4">
+                            <i class="far fa-dot-circle text-primary position-absolute" style="top: 2px; left: -32px;"></i>
+                            <h5 class="font-weight-bold mb-1">HSC In CSE</h5>
+                            <p class="mb-2"><strong>Kamlavati Senior Secondary School</strong> | <small>2022 - 2024</small></p>
+                            <p>Comprehensive learning experience that laid foundation for computer science pursuits.</p>
+                        </div>
+                        <div class="position-relative mb-4">
+                            <i class="far fa-dot-circle text-primary position-absolute" style="top: 2px; left: -32px;"></i>
+                            <h5 class="font-weight-bold mb-1">SSLC</h5>
+                            <p class="mb-2"><strong>Kamlavati Senior Secondary School</strong> | <small>2021 - 2022</small></p>
+                            <p>Strong foundation in academics and computer science passion.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <h3 class="mb-4">My Experience</h3>
+                    <div class="border-left border-primary pt-2 pl-4 ml-2">
+                        <div class="position-relative mb-4">
+                            <i class="far fa-dot-circle text-primary position-absolute" style="top: 2px; left: -32px;"></i>
+                            <h5 class="font-weight-bold mb-1">Tech Youtuber</h5>
+                            <p class="mb-2"><strong>ATL TECH ANIS</strong> | <small>2020 - Till Now</small></p>
+                            <p>Technology-focused YouTube channel delivering programming tutorials and tech reviews.</p>
+                        </div>
+                        <div class="position-relative mb-4">
+                            <i class="far fa-dot-circle text-primary position-absolute" style="top: 2px; left: -32px;"></i>
+                            <h5 class="font-weight-bold mb-1">Electronic Project Designer</h5>
+                            <p class="mb-2"><strong>ATL TECH ANIS</strong> | <small>2020 - Present</small></p>
+                            <p>Innovative electronic projects for students using circuit design expertise.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Qualification End -->
+
+    <!-- Skill Start -->
+    <div class="container-fluid py-5" id="skill">
+        <div class="container">
+            <div class="position-relative d-flex align-items-center justify-content-center">
+                <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #dee2e6;">Skills</h1>
+                <h1 class="position-absolute text-uppercase text-primary">My Skills</h1>
+            </div>
+            <div class="row justify-content-center align-items-center">
+                <div class="col-md-6">
+                    <div class="skill mb-4">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-bold">Python</h6>
+                            <h6 class="font-weight-bold">80%</h6>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="skill mb-4">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-bold">HTML</h6>
+                            <h6 class="font-weight-bold">85%</h6>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="skill mb-4">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-bold">C</h6>
+                            <h6 class="font-weight-bold">75%</h6>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                    <div class="skill mb-4">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-bold">Wordpress</h6>
+                            <h6 class="font-weight-bold">80%</h6>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-success" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Skill End -->
+
+    <!-- Services Start -->
+    <div class="container-fluid pt-5" id="service">
+        <div class="container">
+            <div class="position-relative d-flex align-items-center justify-content-center">
+                <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #dee2e6;">Service</h1>
+                <h1 class="position-absolute text-uppercase text-primary">My Services</h1>
+            </div>
+            <div class="row pb-3">
+                <div class="col-lg-4 col-md-6 text-center mb-5">
+                    <div class="d-flex align-items-center justify-content-center mb-4">
+                        <i class="fa fa-2x fa-laptop service-icon bg-primary text-white mr-3"></i>
+                        <h4 class="font-weight-bold m-0">Electronic Project Design</h4>
+                    </div>
+                    <p>Created innovative electronic projects for students using circuit design expertise.</p>
+                </div>
+                <div class="col-lg-4 col-md-6 text-center mb-5">
+                    <div class="d-flex align-items-center justify-content-center mb-4">
+                        <i class="fa fa-2x fa-laptop-code service-icon bg-primary text-white mr-3"></i>
+                        <h4 class="font-weight-bold m-0">Static Web Design</h4>
+                    </div>
+                    <p>Crafting visually stunning, fast, and responsive static websites with HTML, CSS, JavaScript.</p>
+                </div>
+                <div class="col-lg-4 col-md-6 text-center mb-5">
+                    <div class="d-flex align-items-center justify-content-center mb-4">
+                        <i class="fa fa-2x fa-edit service-icon bg-primary text-white mr-3"></i>
+                        <h4 class="font-weight-bold m-0">Content Creating</h4>
+                    </div>
+                    <p>Engaging tech content exploring latest trends, innovations, and advancements.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Services End -->
+
+    <!-- Portfolio Start - SLIDESHOW DEFAULT -->
+    <div class="container-fluid pt-5 pb-3 portfolio-section" id="portfolio">
+        <div class="container">
+            <div class="position-relative d-flex align-items-center justify-content-center">
+                <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #dee2e6;">Gallery</h1>
+                <h1 class="position-absolute text-uppercase text-primary">My Gallery</h1>
+                <!-- TOGGLE SWITCH -->
+                <label class="slideshow-toggle">
+                    <input type="checkbox" id="toggle-slideshow">
+                    <span class="switch"></span>
+                </label>
+            </div>
+            
+            <!-- FILTER BUTTONS -->
+            <div class="row">
+                <div class="col-12 text-center mb-2">
+                    <ul class="list-inline mb-4" id="portfolio-flters">
+                        <li class="btn btn-sm btn-outline-primary m-1 active" data-filter="*">All</li>
+                        <li class="btn btn-sm btn-outline-primary m-1" data-filter=".first">Awards</li>
+                        <li class="btn btn-sm btn-outline-primary m-1" data-filter=".second">Projects</li>
+                        <li class="btn btn-sm btn-outline-primary m-1" data-filter=".third">Certificates</li>
+                        <li class="btn btn-sm btn-outline-primary m-1" data-filter=".fourth">News</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- GRID VIEW (HIDDEN BY DEFAULT) -->
+            <div class="row portfolio-grid portfolio-container">
+                <div class="col-lg-4 col-md-6 mb-4 portfolio-item first">
+                    <div class="position-relative overflow-hidden mb-2">
+                        <img class="img-fluid rounded w-100" src="/img/portfolio-1.jpg" alt="Award 1" onclick="openZoom(this.src, 'Awards')">
+                        <div class="portfolio-btn bg-primary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-search text-white" style="font-size: 40px; cursor: pointer;" onclick="openZoom('img/portfolio-1.jpg', 'Awards')"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4 portfolio-item second">
+                    <div class="position-relative overflow-hidden mb-2">
+                        <img class="img-fluid rounded w-100" src="/img/portfolio-2.jpg" alt="Project 1" onclick="openZoom(this.src, 'Projects')">
+                        <div class="portfolio-btn bg-primary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-search text-white" style="font-size: 40px; cursor: pointer;" onclick="openZoom('img/portfolio-2.jpg', 'Projects')"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4 portfolio-item third">
+                    <div class="position-relative overflow-hidden mb-2">
+                        <img class="img-fluid rounded w-100" src="/img/portfolio-3.jpg" alt="Certificate 1" onclick="openZoom(this.src, 'Certificates')">
+                        <div class="portfolio-btn bg-primary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-search text-white" style="font-size: 40px; cursor: pointer;" onclick="openZoom('img/portfolio-3.jpg', 'Certificates')"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4 portfolio-item first">
+                    <div class="position-relative overflow-hidden mb-2">
+                        <img class="img-fluid rounded w-100" src="/img/portfolio-4.jpg" alt="Award 2" onclick="openZoom(this.src, 'Awards')">
+                        <div class="portfolio-btn bg-primary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-search text-white" style="font-size: 40px; cursor: pointer;" onclick="openZoom('img/portfolio-4.jpg', 'Awards')"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4 portfolio-item second">
+                    <div class="position-relative overflow-hidden mb-2">
+                        <img class="img-fluid rounded w-100" src="/img/portfolio-5.jpg" alt="Project 2" onclick="openZoom(this.src, 'Projects')">
+                        <div class="portfolio-btn bg-primary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-search text-white" style="font-size: 40px; cursor: pointer;" onclick="openZoom('img/portfolio-5.jpg', 'Projects')"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4 portfolio-item third">
+                    <div class="position-relative overflow-hidden mb-2">
+                        <img class="img-fluid rounded w-100" src="/img/portfolio-6.jpg" alt="Certificate 2" onclick="openZoom(this.src, 'Certificates')">
+                        <div class="portfolio-btn bg-primary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-search text-white" style="font-size: 40px; cursor: pointer;" onclick="openZoom('img/portfolio-6.jpg', 'Certificates')"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4 portfolio-item fourth">
+                    <div class="position-relative overflow-hidden mb-2">
+                        <img class="img-fluid rounded w-100" src="/img/1.jpg" alt="News 1" onclick="openZoom(this.src, 'News')">
+                        <div class="portfolio-btn bg-primary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-search text-white" style="font-size: 40px; cursor: pointer;" onclick="openZoom('img/1.jpg', 'News')"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4 portfolio-item fourth">
+                    <div class="position-relative overflow-hidden mb-2">
+                        <img class="img-fluid rounded w-100" src="/img/2.jpg" alt="News 2" onclick="openZoom(this.src, 'News')">
+                        <div class="portfolio-btn bg-primary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-search text-white" style="font-size: 40px; cursor: pointer;" onclick="openZoom('img/2.jpg', 'News')"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4 portfolio-item fourth">
+                    <div class="position-relative overflow-hidden mb-2">
+                        <img class="img-fluid rounded w-100" src="/img/3.jpg" alt="News 3" onclick="openZoom(this.src, 'News')">
+                        <div class="portfolio-btn bg-primary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-search text-white" style="font-size: 40px; cursor: pointer;" onclick="openZoom('img/3.jpg', 'News')"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDESHOW VIEW (DEFAULT) -->
+            <div class="portfolio-slideshow">
+                <div class="slideshow-container">
+                    <div class="slide-item active first">
+                        <img src="/img/portfolio-1.jpg" alt="Award 1" onclick="openZoom(this.src, 'Awards')">
+                        <div class="slide-overlay">
+                            <span class="slide-category">Awards</span>
+                        </div>
+                    </div>
+                    <div class="slide-item second">
+                        <img src="/img/portfolio-2.jpg" alt="Project 1" onclick="openZoom(this.src, 'Projects')">
+                        <div class="slide-overlay">
+                            <span class="slide-category">Projects</span>
+                        </div>
+                    </div>
+                    <div class="slide-item third">
+                        <img src="/img/portfolio-3.jpg" alt="Certificate 1" onclick="openZoom(this.src, 'Certificates')">
+                        <div class="slide-overlay">
+                            <span class="slide-category">Certificates</span>
+                        </div>
+                    </div>
+                    <div class="slide-item first">
+                        <img src="/img/portfolio-4.jpg" alt="Award 2" onclick="openZoom(this.src, 'Awards')">
+                        <div class="slide-overlay">
+                            <span class="slide-category">Awards</span>
+                        </div>
+                    </div>
+                    <div class="slide-item second">
+                        <img src="/img/portfolio-5.jpg" alt="Project 2" onclick="openZoom(this.src, 'Projects')">
+                        <div class="slide-overlay">
+                            <span class="slide-category">Projects</span>
+                        </div>
+                    </div>
+                    <div class="slide-item third">
+                        <img src="/img/portfolio-6.jpg" alt="Certificate 2" onclick="openZoom(this.src, 'Certificates')">
+                        <div class="slide-overlay">
+                            <span class="slide-category">Certificates</span>
+                        </div>
+                    </div>
+                    <div class="slide-item fourth">
+                        <img src="/img/1.jpg" alt="News 1" onclick="openZoom(this.src, 'News')">
+                        <div class="slide-overlay">
+                            <span class="slide-category">News</span>
+                        </div>
+                    </div>
+                    <div class="slide-item fourth">
+                        <img src="/img/2.jpg" alt="News 2" onclick="openZoom(this.src, 'News')">
+                        <div class="slide-overlay">
+                            <span class="slide-category">News</span>
+                        </div>
+                    </div>
+                    <div class="slide-item fourth">
+                        <img src="/img/3.jpg" alt="News 3" onclick="openZoom(this.src, 'News')">
+                        <div class="slide-overlay">
+                            <span class="slide-category">News</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="prev" onclick="changeSlide(-1)">❮</button>
+                <button class="next" onclick="changeSlide(1)">❯</button>
+            </div>
+        </div>
+    </div>
+    <!-- Portfolio End -->
+
+    <!-- 🔥 MASSIVE ZOOM OVERLAY -->
+    <div class="zoom-overlay" id="zoomOverlay">
+        <span class="zoom-close" onclick="closeZoom()">&times;</span>
+        <button class="zoom-nav prev" onclick="zoomPrev()">&#8249;</button>
+        <button class="zoom-nav next" onclick="zoomNext()">&#8250;</button>
+        <img class="zoom-image" id="zoomImage" src="" alt="">
+        <div class="zoom-title" id="zoomTitle"></div>
+    </div>
+
+    <!-- Contact Start -->
+    <div class="container-fluid py-5" id="contact">
+        <div class="container">
+            <div class="position-relative d-flex align-items-center justify-content-center">
+                <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #dee2e6;">Contact</h1>
+                <h1 class="position-absolute text-uppercase text-primary">Contact Me</h1>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="contact-form text-center">
+                        <div id="success"></div>
+                        <form name="sentMessage" action="https://formspree.io/f/mldpaade" method="POST" id="contactForm">
+                            <div class="form-row">
+                                <div class="control-group col-sm-6">
+                                    <input type="text" class="form-control p-4" name="name" id="name" placeholder="Your Name" required />
+                                    <p class="help-block text-danger"></p>
+                                </div>
+                                <div class="control-group col-sm-6">
+                                    <input type="email" class="form-control p-4" name="_replyto" id="email" placeholder="Your Email" required />
+                                    <p class="help-block text-danger"></p>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <input type="text" class="form-control p-4" name="subject" id="subject" placeholder="Subject" required />
+                                <p class="help-block text-danger"></p>
+                            </div>
+                            <div class="control-group">
+                                <textarea class="form-control py-3 px-4" name="message" rows="5" id="message" placeholder="Message" required></textarea>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                            <div>
+                                <button class="btn btn-outline-primary" type="submit" id="sendMessageButton">
+                                    <span id="submitText">Send Message</span>
+                                    <span id="loadingText" style="display: none;">Sending...</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Contact End -->
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-primary text-white mt-5 py-5 px-sm-3 px-md-5">
+        <div class="container text-center py-5">
+            <div class="d-flex justify-content-center mb-4">
+                <a class="btn btn-light btn-social mr-2" href="https://youtube.com/@atltechanis?si=2PO8mDKHphLw1jrc"><i class="fab fa-youtube"></i></a>
+                <a class="btn btn-light btn-social mr-2" href="https://www.linkedin.com/in/anissankar-v/"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <div class="d-flex justify-content-center mb-3">
+                <a class="text-white" href="/#">Privacy</a>
+                <span class="px-3">|</span>
+                <a class="text-white" href="/#">Terms</a>
+                <span class="px-3">|</span>
+                <a class="text-white" href="/#">FAQs</a>
+                <span class="px-3">|</span>
+                <a class="text-white" href="/#">Help</a>
+            </div>
+            <p class="m-0">&copy; <a class="text-white font-weight-bold" href="https://youtube.com/@atltechanis?si=2PO8mDKHphLw1jrc">atltechanis</a>. All Rights Reserved. Designed by <a class="text-white font-weight-bold" href="https://htmlcodex.com">HTMLCODEX</a></p>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="/lib/typed/typed.min.js"></script>
+    <script src="/lib/easing/easing.min.js"></script>
+    <script src="/lib/waypoints/waypoints.min.js"></script>
+    <script src="/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="/lib/isotope/isotope.pkgd.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="/mail/jqBootstrapValidation.min.js"></script>
+    <script src="/mail/contact.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="/js/main.js"></script>
+
+    <!-- FORMSPREE OVERRIDE -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.onsubmit = null;
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const submitButton = document.getElementById('sendMessageButton');
+                const submitText = document.getElementById('submitText');
+                const loadingText = document.getElementById('loadingText');
+                const successDiv = document.getElementById('success');
+                
+                submitButton.disabled = true;
+                submitText.style.display = 'none';
+                loadingText.style.display = 'inline';
+                successDiv.innerHTML = '';
+                
+                const formData = new FormData(contactForm);
+                fetch(contactForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        successDiv.innerHTML = `
+                            <div class="alert alert-success alert-dismissible fade show">
+                                <strong>✅ Success!</strong> Message sent. I'll get back to you soon!
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            </div>
+                        `;
+                        contactForm.reset();
+                    } else throw new Error(data.error);
+                })
+                .catch(() => {
+                    successDiv.innerHTML = `
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <strong>❌ Oops!</strong> Something went wrong. Please try again.
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                    `;
+                })
+                .finally(() => {
+                    submitButton.disabled = false;
+                    submitText.style.display = 'inline';
+                    loadingText.style.display = 'none';
+                });
+            });
+        }
+    });
+    </script>
+
+    <!-- 🔥 PERFECT BIG OVERLAY ZOOM + SLIDESHOW -->
+    <script>
+    // ZOOM FUNCTIONS
+    let zoomImages = [
+        'img/portfolio-1.jpg', 'img/portfolio-2.jpg', 'img/portfolio-3.jpg', 'img/portfolio-4.jpg',
+        'img/portfolio-5.jpg', 'img/portfolio-6.jpg', 'img/1.jpg', 'img/2.jpg', 'img/3.jpg'
+    ];
+    let zoomTitles = ['Awards', 'Projects', 'Certificates', 'Awards', 'Projects', 'Certificates', 'News', 'News', 'News'];
+    let currentZoomIndex = 0;
+
+    function openZoom(src, title) {
+        document.getElementById('zoomImage').src = src;
+        document.getElementById('zoomTitle').textContent = title;
+        document.getElementById('zoomOverlay').classList.add('active');
+        currentZoomIndex = zoomImages.indexOf(src);
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeZoom() {
+        document.getElementById('zoomOverlay').classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    function zoomPrev() {
+        currentZoomIndex = (currentZoomIndex - 1 + zoomImages.length) % zoomImages.length;
+        document.getElementById('zoomImage').src = zoomImages[currentZoomIndex];
+        document.getElementById('zoomTitle').textContent = zoomTitles[currentZoomIndex];
+    }
+
+    function zoomNext() {
+        currentZoomIndex = (currentZoomIndex + 1) % zoomImages.length;
+        document.getElementById('zoomImage').src = zoomImages[currentZoomIndex];
+        document.getElementById('zoomTitle').textContent = zoomTitles[currentZoomIndex];
+    }
+
+    // Close on overlay click
+    document.getElementById('zoomOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeZoom();
+    });
+
+    // Close on ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeZoom();
+    });
+
+    // SLIDESHOW FUNCTIONALITY
+    let slideIndex = 1;
+    let allSlides = document.querySelectorAll('.slide-item');
+    let currentSlides = Array.from(allSlides);
+    showSlides(slideIndex);
+
+    function changeSlide(n) {
+        showSlides(slideIndex += n);
+    }
+
+    function showSlides(n) {
+        if (n > currentSlides.length) slideIndex = 1;
+        if (n < 1) slideIndex = currentSlides.length;
+        
+        allSlides.forEach(slide => slide.classList.remove('active'));
+        currentSlides.forEach(slide => slide.classList.remove('active'));
+        currentSlides[slideIndex-1].classList.add('active');
+    }
+
+    // AUTO SLIDE
+    let autoSlide = setInterval(() => changeSlide(1), 3000);
+
+    // ARROW CLICK - PAUSE AUTO
+    document.querySelectorAll('.prev, .next').forEach(btn => {
+        btn.addEventListener('click', () => {
+            clearInterval(autoSlide);
+            setTimeout(() => autoSlide = setInterval(() => changeSlide(1), 3000), 1000);
+        });
+    });
+
+    // FILTER SYNC
+    document.querySelectorAll('#portfolio-flters li').forEach(filter => {
+        filter.addEventListener('click', function() {
+            document.querySelectorAll('#portfolio-flters li').forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            const filterValue = this.getAttribute('data-filter');
+            if (filterValue === '*') {
+                currentSlides = Array.from(allSlides);
+            } else {
+                currentSlides = Array.from(allSlides).filter(slide => 
+                    slide.classList.contains(filterValue.replace('.', ''))
+                );
+            }
+            
+            slideIndex = 1;
+            clearInterval(autoSlide);
+            showSlides(slideIndex);
+            autoSlide = setInterval(() => changeSlide(1), 3000);
+        });
+    });
+
+    // GRID TOGGLE
+    document.getElementById('toggle-slideshow').addEventListener('change', function() {
+        clearInterval(autoSlide);
+    });
+    </script>
+  <div id="react-root"></div>
+</body>
+
+</html>
