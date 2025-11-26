@@ -9982,3 +9982,21 @@ h6,
   padding: 0;
   list-style-type: none;
 }
+/* Subtle floating animation */
+@keyframes subtleFloat {
+  0%   { transform: translate(0px, 0px); }
+  25%  { transform: translate(3px, -2px); }
+  50%  { transform: translate(0px, -3px); }
+  75%  { transform: translate(-3px, -1px); }
+  100% { transform: translate(0px, 0px); }
+}
+
+/* Apply animation to profile image */
+#home .col-lg-5 img {
+  animation: subtleFloat 3s ease-in-out infinite;
+}
+
+/* Apply animation to the text block */
+#home .col-lg-7 {
+  animation: subtleFloat 3s ease-in-out infinite;
+}
